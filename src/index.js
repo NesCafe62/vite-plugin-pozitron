@@ -107,7 +107,7 @@ export default function pozitronPlugin(options = {}) {
 				sourceFileName: id,
 			};
 			let { code, map } = transformSync(source, options);
-			code = 'import h from "pozitron-js/render";' + code;
+			code = 'import { h } from "pozitron-js/render";' + code;
 			return { code, map };
 		}
 	};
