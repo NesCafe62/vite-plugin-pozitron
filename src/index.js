@@ -24,7 +24,7 @@ function transformNode(node) {
 		tagName = openingElement.name.name;
 		props = [];
 		let events = null;
-		for (attr of openingElement.attributes) {
+		for (const attr of openingElement.attributes) {
 			const propName = attr.name.name;
 			const value = attr.value.expression;
 			if (propName.startsWith('on')) {
