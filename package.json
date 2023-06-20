@@ -15,6 +15,9 @@
 		"@babel/plugin-syntax-jsx": "^7.18.6",
 		"pozitron-js": "git+https://github.com/NesCafe62/pozitron.git#main"
 	},
+    "exports": {
+        ".": "./src/index.js"
+    },
     "keywords": [
         "vite",
         "vite plugin",
