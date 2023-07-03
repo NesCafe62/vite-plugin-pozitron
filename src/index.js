@@ -26,7 +26,9 @@ function transformNode(node) {
 		let events = null;
 		for (const attr of openingElement.attributes) {
 			const propName = attr.name.name;
-			const value = attr.value.expression;
+			const value = t.isJSXExpressionContainer(attr.value)
+				? attr.value.expression
+				: attr.value;
 			if (propName.startsWith('on')) {
 				if (!events) {
 					events = [];
