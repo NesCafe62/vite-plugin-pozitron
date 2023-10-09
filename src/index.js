@@ -29,7 +29,19 @@ function transformNode(node) {
 			const value = t.isJSXExpressionContainer(attr.value)
 				? attr.value.expression
 				: attr.value;
-			if (propName.startsWith('on')) {
+			if (propName === 'ref') {
+				let refCallback;
+				if (t.isArrowFunctionExpression(value)) {
+					refCallback = value;
+				} else {
+					refCallback = t.arrowFunctionExpression(
+						[t.identifier("el")],
+						t.assignmentExpression("=", value, t.identifier("el"))
+					);
+				}
+				props.push(t.objectProperty(t.stringLiteral('ref'), refCallback));
+				continue;
+			} else if (propName.startsWith('on')) {
 				if (!events) {
 					events = [];
 				}
