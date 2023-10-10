@@ -49,7 +49,7 @@ function transformNode(node) {
 				events.push(t.objectProperty(t.stringLiteral(event), value));
 				continue;
 			}
-			props.push(t.objectProperty(t.stringLiteral(propName), value));
+			props.push(t.objectProperty(t.stringLiteral(propName), value || t.nullLiteral()));
 		}
 		if (events) {
 			props.push(
