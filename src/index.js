@@ -76,7 +76,13 @@ function transformNode(node) {
 	const args = [
 		isComponent(tagName) ? t.identifier(tagName) : t.stringLiteral(tagName),
 		props ? t.objectExpression(props) : t.nullLiteral(),
-		t.arrayExpression(node.children.map(transformNode).filter(child => child !== null))
+		t.arrayExpression(node.children.reduce((res, child) => {
+			const node = transformNode(child);
+			if (node !== null) {
+				res.push(node);
+			}
+			return res;
+		}, []))
 	];
 	return t.callExpression(t.identifier('h'), args);
 }
