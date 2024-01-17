@@ -10,9 +10,20 @@ function isComponent(tagName) {
 	return firstChar === firstChar.toUpperCase();
 }
 
+function isOnlyWhiteSpace(text) {
+	return (
+		text.length === 0 ||
+		text.test(/^[\s\t\r\n]*$/)
+	);
+}
+
 function transformNode(node) {
 	if (t.isJSXText(node)) {
-		return t.stringLiteral(node.extra.rawValue);
+		const text = node.extra.raw;
+		if (isOnlyWhiteSpace(text)) {
+			return null;
+		}
+		return t.stringLiteral(text);
 	}
 	if (t.isJSXExpressionContainer(node)) {
 		return node.expression;
@@ -35,8 +46,8 @@ function transformNode(node) {
 					refCallback = value;
 				} else {
 					refCallback = t.arrowFunctionExpression(
-						[t.identifier("el")],
-						t.assignmentExpression("=", value, t.identifier("el"))
+						[t.identifier('el')],
+						t.assignmentExpression('=', value, t.identifier('el'))
 					);
 				}
 				props.push(t.objectProperty(t.stringLiteral('ref'), refCallback));
