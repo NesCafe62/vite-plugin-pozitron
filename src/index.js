@@ -10,10 +10,12 @@ function isComponent(tagName) {
 	return firstChar === firstChar.toUpperCase();
 }
 
+const RegExpWhitespace = new RegExp("^[\\s\\t\\r\\n]*$");
+
 function isOnlyWhiteSpace(text) {
 	return (
 		text.length === 0 ||
-		text.test(/^[\s\t\r\n]*$/)
+		RegExpWhitespace.test(text)
 	);
 }
 
