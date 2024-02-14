@@ -54,7 +54,7 @@ function transformNode(node) {
 				}
 				props.push(t.objectProperty(t.stringLiteral('ref'), refCallback));
 				continue;
-			} else if (propName.startsWith('on')) {
+			} else if (propName.startsWith('on') && propName !== 'on') {
 				if (!events) {
 					events = [];
 				}
