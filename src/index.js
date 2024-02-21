@@ -38,31 +38,35 @@ function transformNode(node) {
 		props = [];
 		let events = null;
 		for (const attr of openingElement.attributes) {
-			const propName = attr.name.name;
-			const value = t.isJSXExpressionContainer(attr.value)
-				? attr.value.expression
-				: attr.value;
-			if (propName === 'ref') {
-				let refCallback;
-				if (t.isArrowFunctionExpression(value)) {
-					refCallback = value;
-				} else {
-					refCallback = t.arrowFunctionExpression(
-						[t.identifier('el')],
-						t.assignmentExpression('=', value, t.identifier('el'))
-					);
+			if (t.isJSXSpreadAttribute(attr)) {
+				props.push(t.spreadElement(attr.argument));
+			} else {
+				const propName = attr.name.name;
+				const value = t.isJSXExpressionContainer(attr.value)
+					? attr.value.expression
+					: attr.value;
+				if (propName === 'ref') {
+					let refCallback;
+					if (t.isArrowFunctionExpression(value)) {
+						refCallback = value;
+					} else {
+						refCallback = t.arrowFunctionExpression(
+							[t.identifier('el')],
+							t.assignmentExpression('=', value, t.identifier('el'))
+						);
+					}
+					props.push(t.objectProperty(t.stringLiteral('ref'), refCallback));
+					continue;
+				} else if (propName.startsWith('on') && propName !== 'on') {
+					if (!events) {
+						events = [];
+					}
+					const event = propName.slice(2).toLowerCase();
+					events.push(t.objectProperty(t.stringLiteral(event), value));
+					continue;
 				}
-				props.push(t.objectProperty(t.stringLiteral('ref'), refCallback));
-				continue;
-			} else if (propName.startsWith('on') && propName !== 'on') {
-				if (!events) {
-					events = [];
-				}
-				const event = propName.slice(2).toLowerCase();
-				events.push(t.objectProperty(t.stringLiteral(event), value));
-				continue;
+				props.push(t.objectProperty(t.stringLiteral(propName), value || t.nullLiteral()));
 			}
-			props.push(t.objectProperty(t.stringLiteral(propName), value || t.nullLiteral()));
 		}
 		if (events) {
 			props.push(
