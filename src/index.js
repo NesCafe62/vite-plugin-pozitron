@@ -41,7 +41,9 @@ function transformNode(node) {
 			if (t.isJSXSpreadAttribute(attr)) {
 				props.push(t.spreadElement(attr.argument));
 			} else {
-				const propName = attr.name.name;
+				const propName = t.isJSXIdentifier(attr.name.name)
+					? `${attr.name.namespace.name}:${attr.name.name.name}`
+					: attr.name.name;
 				const value = t.isJSXExpressionContainer(attr.value)
 					? attr.value.expression
 					: attr.value;
